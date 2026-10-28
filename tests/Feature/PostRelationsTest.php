@@ -74,6 +74,18 @@ it('keeps posts when their category is deleted', function () {
     expect($post->fresh()->category_id)->toBeNull();
 });
 
+it('clears the post author when the author is deleted', function () {
+    $author = User::factory()->create();
+    $post = Post::factory()->create(['user_id' => $author->id]);
+
+    expect($author->posts()->count())->toBe(1);
+
+    $author->delete();
+
+    $this->assertDatabaseHas('posts', ['id' => $post->id]);
+    expect($post->fresh()->user_id)->toBeNull();
+});
+
 it('replaces the tags on a post with sync', function () {
     $post = Post::factory()->create();
     $tags = Tag::factory(3)->create();
@@ -82,6 +94,7 @@ it('replaces the tags on a post with sync', function () {
     $post->tags()->sync([$tags[1]->id, $tags[2]->id]);
 
     expect($post->tags()->count())->toBe(2);
+    expect($tags[2]->posts()->whereKey($post->id)->exists())->toBeTrue();
     $this->assertDatabaseMissing('post_tag', ['post_id' => $post->id, 'tag_id' => $tags[0]->id]);
     $this->assertDatabaseHas('post_tag', ['post_id' => $post->id, 'tag_id' => $tags[2]->id]);
 });
