@@ -17,11 +17,13 @@ php artisan migrate
 
 Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <http://localhost:8000>.
 
-## État actuel (tag lab-03)
+## État actuel (tag lab-03b)
 
 - Articles persistés dans SQLite et lus avec le modèle Eloquent `Post`.
 - La migration `create_posts_table` crée les champs `title`, `slug`, `body`, `is_published` et `published_at`.
-- La liste des articles est paginée, le détail utilise la liaison modèle-route par slug et le formulaire valide les données avant l'enregistrement.
+- Une migration distincte ajoute l'extrait facultatif `excerpt` sans modifier la migration initiale.
+- La liste est paginée, le détail utilise la liaison modèle-route par slug et les articles peuvent être créés, modifiés et supprimés.
+- Le scope `Post::published()` centralise le filtre de publication; le bouton dédié permet de publier ou dépublier un article.
 - L'accueil affiche les trois articles publiés les plus récents.
 - Layout Blade `<x-layout>` et composants réutilisables `x-alert`, `x-navigation-link`, `x-navbar`, `x-post-card` et `x-page-header`.
 - Base de données SQLite locale (`database/database.sqlite`, non versionnée).
@@ -38,6 +40,10 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 | GET | `/posts/create` | `posts.create` | `PostController@create` |
 | POST | `/posts` | `posts.store` | `PostController@store` |
 | GET | `/posts/{post}` | `posts.show` | `PostController@show` |
+| GET | `/posts/{post}/edit` | `posts.edit` | `PostController@edit` |
+| PUT/PATCH | `/posts/{post}` | `posts.update` | `PostController@update` |
+| DELETE | `/posts/{post}` | `posts.destroy` | `PostController@destroy` |
+| PATCH | `/posts/{post}/publication` | `posts.publication` | `PostController@togglePublication` |
 
 ## Captures
 
@@ -64,3 +70,11 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 ### Formulaire de création
 
 ![Formulaire avec erreurs de validation](screenshots/s05-formulaire.png)
+
+### Modification d'un article
+
+![Formulaire prérempli de modification d'un article](screenshots/s06-modification.png)
+
+### Confirmation de suppression
+
+![Confirmation avant la suppression d'un article](screenshots/s06-suppression.png)

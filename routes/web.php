@@ -15,4 +15,7 @@ Route::get('/posts/archive/{year}', [PostController::class, 'archive'])
     ->name('posts.archive');
 
 Route::resource('posts', PostController::class)
-    ->only(['index', 'show', 'create', 'store']);
+    ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+
+Route::patch('/posts/{post}/publication', [PostController::class, 'togglePublication'])
+    ->name('posts.publication');

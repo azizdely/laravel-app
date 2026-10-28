@@ -14,7 +14,7 @@
             {{ $post->title }}
         </a>
     </h2>
-    <p class="mt-2 flex-1 leading-7 text-gray-600">{{ \Illuminate\Support\Str::limit($post->body, 120) }}</p>
+    <p class="mt-2 flex-1 leading-7 text-gray-600">{{ $post->excerpt ?? \Illuminate\Support\Str::limit($post->body, 120) }}</p>
     <div class="mt-5 flex items-center justify-between gap-3 border-t border-gray-100 pt-4 text-sm">
         <span class="text-gray-500">{{ $post->created_at->format('d/m/Y') }}</span>
         @if ($post->published_at)

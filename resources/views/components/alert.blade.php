@@ -5,6 +5,7 @@
         'info' => ['container' => 'border-blue-300 bg-blue-50 text-blue-950', 'title' => 'text-blue-800', 'role' => 'status'],
         'warning' => ['container' => 'border-amber-300 bg-amber-50 text-amber-950', 'title' => 'text-amber-800', 'role' => 'alert'],
         'success' => ['container' => 'border-green-300 bg-green-50 text-green-950', 'title' => 'text-green-800', 'role' => 'status'],
+        'error' => ['container' => 'border-red-300 bg-red-50 text-red-950', 'title' => 'text-red-800', 'role' => 'alert'],
         default => throw new InvalidArgumentException("Unsupported alert type [{$type}]."),
     };
 @endphp

@@ -99,11 +99,17 @@ it('rejects missing article fields without saving a record', function () {
 });
 
 it('rejects an invalid slug and a body that is too short', function () {
-    $this->post(route('posts.store'), [
-        'title' => 'Article invalide',
-        'slug' => 'Article invalide',
-        'body' => 'Trop court.',
-    ])->assertSessionHasErrors(['slug', 'body']);
+    $this->followingRedirects()
+        ->from(route('posts.create'))
+        ->post(route('posts.store'), [
+            'title' => 'Article invalide',
+            'slug' => 'Article invalide',
+            'body' => 'Trop court.',
+        ])
+        ->assertOk()
+        ->assertSee('Le formulaire contient des erreurs')
+        ->assertSee('The slug field format is invalid.')
+        ->assertSee('The body field must be at least 20 characters.');
 
     $this->assertDatabaseCount('posts', 0);
 });
