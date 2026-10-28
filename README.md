@@ -17,11 +17,12 @@ php artisan migrate
 
 Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <http://localhost:8000>.
 
-## État actuel (tag lab-02)
+## État actuel (tag lab-02b)
 
 - Routes nommées, toutes servies par des contrôleurs : `PageController` (pages) et `PostController` (articles).
 - Articles stockés dans un tableau PHP, sans base de données pour l'instant.
-- Layout Blade `<x-layout>` avec Tailwind chargé par Vite.
+- Layout Blade `<x-layout>` et composants réutilisables `x-alert`, `x-navigation-link`, `x-navbar`, `x-post-card` et `x-page-header`.
+- Navigation active accessible, archives par année, et pages d'accueil, de liste et de détail construites à partir de routes nommées.
 - Base de données SQLite locale (`database/database.sqlite`, non versionnée).
 
 ## Routes disponibles
@@ -48,3 +49,7 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 ### Détail d'un article
 
 ![Détail d'un article](screenshots/s03-article.png)
+
+### Liste avec composants Blade
+
+![Liste des articles construite avec des composants Blade](screenshots/s04-articles.png)

@@ -23,7 +23,7 @@ test('post index and detail pages link to named routes', function () {
         ->assertOk()
         ->assertSee('Découvrir Laravel 13')
         ->assertSee(route('posts.show', 'routes-et-controleurs'), false)
-        ->assertSee(route('posts.archive', 2025), false);
+        ->assertSee(route('posts.archive', 2024), false);
 
     $this->get(route('posts.show', 'routes-et-controleurs'))
         ->assertOk()
@@ -33,7 +33,7 @@ test('post index and detail pages link to named routes', function () {
 });
 
 test('post archive filters by year and rejects invalid or unknown routes', function () {
-    $this->get(route('posts.archive', 2025))
+    $this->get(route('posts.archive', 2024))
         ->assertOk()
         ->assertSee('Premiers pas avec Blade')
         ->assertDontSee('Découvrir Laravel 13');
