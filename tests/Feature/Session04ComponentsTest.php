@@ -1,17 +1,34 @@
 <?php
 
+use App\Models\Post;
+
 it('reconstructs the article pages with reusable components', function () {
+    $publishedPost = Post::create([
+        'title' => 'Routes et contrôleurs',
+        'slug' => 'routes-et-controleurs',
+        'body' => 'Suivre une requête depuis son URL jusqu’au HTML affiché.',
+        'is_published' => true,
+        'published_at' => now(),
+    ]);
+
+    Post::create([
+        'title' => 'Article en brouillon',
+        'slug' => 'article-en-brouillon',
+        'body' => 'Cet article est conservé comme brouillon.',
+        'is_published' => false,
+    ]);
+
     $this->get(route('posts.index'))
         ->assertOk()
         ->assertSee('Tous les articles')
-        ->assertSee('À la une')
-        ->assertSee(route('posts.show', 'routes-et-controleurs'), false)
+        ->assertSee('Brouillon')
+        ->assertSee(route('posts.show', $publishedPost), false)
         ->assertSee('aria-current="page"', false);
 
-    $this->get(route('posts.show', 'routes-et-controleurs'))
+    $this->get(route('posts.show', $publishedPost))
         ->assertOk()
         ->assertSee('Routes et contrôleurs')
-        ->assertSee('Aziz Dely')
+        ->assertSee('Publié le')
         ->assertSee('Retour aux articles')
         ->assertSee(route('posts.index'), false)
         ->assertSee('aria-current="page"', false);
@@ -26,13 +43,14 @@ it('shows accessible alert variants and shared page headers', function () {
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('Sprint en cours')
         ->assertSee('Le projet fil rouge')
+        ->assertDontSee('Sprint en cours')
         ->assertSee('aria-current="page"', false);
 
     $this->get(route('posts.index'))
         ->assertOk()
-        ->assertDontSee('Le projet fil rouge');
+        ->assertDontSee('Le projet fil rouge')
+        ->assertSee(route('posts.create'), false);
 });
 
 it('shows an empty state for an archive without articles', function () {

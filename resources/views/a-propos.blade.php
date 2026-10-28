@@ -14,7 +14,7 @@
             Ce site accompagne l’apprentissage de Laravel et du développement web.
         </x-alert>
         <x-alert type="warning" title="Données provisoires">
-            Les articles sont encore conservés dans le contrôleur à cette étape du projet.
+            Les articles sont maintenant enregistrés dans la base de données SQLite.
         </x-alert>
     </div>
 </x-layout>

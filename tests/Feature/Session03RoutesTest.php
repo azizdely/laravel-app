@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Post;
+
 test('named page routes render their content and navigation', function () {
     $this->get(route('home'))
         ->assertOk()
@@ -19,13 +21,21 @@ test('named page routes render their content and navigation', function () {
 });
 
 test('post index and detail pages link to named routes', function () {
+    $post = Post::create([
+        'title' => 'Routes et contrôleurs',
+        'slug' => 'routes-et-controleurs',
+        'body' => 'Une route associe une URL à une méthode de contrôleur.',
+        'is_published' => true,
+        'published_at' => now()->setDate(2024, 11, 18),
+    ]);
+
     $this->get(route('posts.index'))
         ->assertOk()
-        ->assertSee('Découvrir Laravel 13')
-        ->assertSee(route('posts.show', 'routes-et-controleurs'), false)
+        ->assertSee($post->title)
+        ->assertSee(route('posts.show', $post), false)
         ->assertSee(route('posts.archive', 2024), false);
 
-    $this->get(route('posts.show', 'routes-et-controleurs'))
+    $this->get(route('posts.show', $post))
         ->assertOk()
         ->assertSee('Routes et contrôleurs')
         ->assertSee('Une route associe une URL à une méthode de contrôleur.')
@@ -33,10 +43,26 @@ test('post index and detail pages link to named routes', function () {
 });
 
 test('post archive filters by year and rejects invalid or unknown routes', function () {
+    Post::create([
+        'title' => 'Article de 2024',
+        'slug' => 'article-de-2024',
+        'body' => 'Un article publié en 2024 pour vérifier les archives.',
+        'is_published' => true,
+        'published_at' => now()->setDate(2024, 10, 30),
+    ]);
+
+    Post::create([
+        'title' => 'Article de 2026',
+        'slug' => 'article-de-2026',
+        'body' => 'Un article publié en 2026 pour vérifier les archives.',
+        'is_published' => true,
+        'published_at' => now()->setDate(2026, 9, 1),
+    ]);
+
     $this->get(route('posts.archive', 2024))
         ->assertOk()
-        ->assertSee('Premiers pas avec Blade')
-        ->assertDontSee('Découvrir Laravel 13');
+        ->assertSee('Article de 2024')
+        ->assertDontSee('Article de 2026');
 
     $this->get('/posts/archive/abc')->assertNotFound();
 

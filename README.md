@@ -17,12 +17,13 @@ php artisan migrate
 
 Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <http://localhost:8000>.
 
-## État actuel (tag lab-02b)
+## État actuel (tag lab-03)
 
-- Routes nommées, toutes servies par des contrôleurs : `PageController` (pages) et `PostController` (articles).
-- Articles stockés dans un tableau PHP, sans base de données pour l'instant.
+- Articles persistés dans SQLite et lus avec le modèle Eloquent `Post`.
+- La migration `create_posts_table` crée les champs `title`, `slug`, `body`, `is_published` et `published_at`.
+- La liste des articles est paginée, le détail utilise la liaison modèle-route par slug et le formulaire valide les données avant l'enregistrement.
+- L'accueil affiche les trois articles publiés les plus récents.
 - Layout Blade `<x-layout>` et composants réutilisables `x-alert`, `x-navigation-link`, `x-navbar`, `x-post-card` et `x-page-header`.
-- Navigation active accessible, archives par année, et pages d'accueil, de liste et de détail construites à partir de routes nommées.
 - Base de données SQLite locale (`database/database.sqlite`, non versionnée).
 
 ## Routes disponibles
@@ -32,9 +33,11 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 | GET | `/` | `home` | `PageController@home` |
 | GET | `/a-propos` | `about` | `PageController@about` |
 | GET | `/heure` | `time` | `PageController@time` |
-| GET | `/posts` | `posts.index` | `PostController@index` |
 | GET | `/posts/archive/{year}` | `posts.archive` | `PostController@archive` |
-| GET | `/posts/{slug}` | `posts.show` | `PostController@show` |
+| GET | `/posts` | `posts.index` | `PostController@index` |
+| GET | `/posts/create` | `posts.create` | `PostController@create` |
+| POST | `/posts` | `posts.store` | `PostController@store` |
+| GET | `/posts/{post}` | `posts.show` | `PostController@show` |
 
 ## Captures
 
@@ -53,3 +56,11 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 ### Liste avec composants Blade
 
 ![Liste des articles construite avec des composants Blade](screenshots/s04-articles.png)
+
+### Liste paginée depuis SQLite
+
+![Liste paginée des articles](screenshots/s05-articles.png)
+
+### Formulaire de création
+
+![Formulaire avec erreurs de validation](screenshots/s05-formulaire.png)

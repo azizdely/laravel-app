@@ -1,21 +1,27 @@
 <x-layout>
-    <x-slot:title>{{ $post['title'] }} - Mini-CMS</x-slot:title>
+    <x-slot:title>{{ $post->title }} - Mini-CMS</x-slot:title>
+
+    @if (session('status'))
+        <x-alert type="success" title="Enregistrement terminé" class="mb-6">
+            {{ session('status') }}
+        </x-alert>
+    @endif
 
     <article class="mx-auto max-w-3xl">
-        <x-page-header :title="$post['title']" :subtitle="$post['summary']" />
+        <x-page-header :title="$post->title" />
 
         <p class="mt-4 text-sm text-gray-500">
-            Par {{ $post['author'] }} ·
-            <a href="{{ route('posts.archive', $post['year']) }}" class="underline">
-                <time datetime="{{ $post['published_at'] }}">{{ $post['published_at'] }}</time>
-            </a>
+            @if ($post->published_at)
+                Publié le
+                <a href="{{ route('posts.archive', $post->published_at->year) }}" class="underline">
+                    <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->format('d/m/Y') }}</time>
+                </a>
+            @else
+                Brouillon
+            @endif
         </p>
 
-        <div class="mt-8 space-y-5 text-lg leading-8 text-gray-700">
-            @foreach ($post['body'] as $paragraph)
-                <p>{{ $paragraph }}</p>
-            @endforeach
-        </div>
+        <p class="mt-8 whitespace-pre-line text-lg leading-8 text-gray-700">{{ $post->body }}</p>
     </article>
 
     <p class="mt-8">

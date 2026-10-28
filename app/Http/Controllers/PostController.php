@@ -2,107 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    /**
-     * @return array<string, array{
-     *     slug: string,
-     *     title: string,
-     *     year: int,
-     *     author: string,
-     *     published_at: string,
-     *     featured: bool,
-     *     summary: string,
-     *     body: list<string>
-     * }>
-     */
-    private function posts(): array
-    {
-        return [
-            'decouvrir-laravel-13' => [
-                'slug' => 'decouvrir-laravel-13',
-                'title' => 'Découvrir Laravel 13',
-                'year' => 2026,
-                'author' => 'Aziz Dely',
-                'published_at' => '2026-10-28',
-                'featured' => true,
-                'summary' => 'Un premier aperçu des outils et des conventions qui rendent Laravel agréable à utiliser.',
-                'body' => [
-                    'Laravel 13 simplifie la structure du projet : la configuration des middlewares et des exceptions se fait dans bootstrap/app.php.',
-                    'Le framework fournit des conventions utiles pour organiser les routes, les contrôleurs, les modèles et les vues.',
-                ],
-            ],
-            'routes-et-controleurs' => [
-                'slug' => 'routes-et-controleurs',
-                'title' => 'Routes et contrôleurs',
-                'year' => 2026,
-                'author' => 'Aziz Dely',
-                'published_at' => '2026-10-24',
-                'featured' => false,
-                'summary' => 'Suivre une requête depuis son URL jusqu’au HTML affiché.',
-                'body' => [
-                    'Une route associe une URL à une méthode de contrôleur. Le contrôleur prépare les données, la vue les affiche.',
-                    'Les noms de routes gardent les liens stables et les composants Blade évitent de répéter la même interface.',
-                ],
-            ],
-            'premiers-pas-avec-blade' => [
-                'slug' => 'premiers-pas-avec-blade',
-                'title' => 'Premiers pas avec Blade',
-                'year' => 2024,
-                'author' => 'Aziz Dely',
-                'published_at' => '2024-11-18',
-                'featured' => false,
-                'summary' => 'Créer des pages dynamiques tout en gardant les données affichées échappées.',
-                'body' => [
-                    'Blade est le moteur de vues de Laravel. Les doubles accolades échappent toujours le contenu affiché.',
-                    'Les composants permettent de réutiliser des éléments d’interface comme les alertes, la navigation et les cartes.',
-                ],
-            ],
-            'organiser-ses-vues' => [
-                'slug' => 'organiser-ses-vues',
-                'title' => 'Organiser ses vues',
-                'year' => 2024,
-                'author' => 'Aziz Dely',
-                'published_at' => '2024-10-30',
-                'featured' => false,
-                'summary' => 'Partager une structure de page et composer des listes et des détails réutilisables.',
-                'body' => [
-                    'Un layout Blade centralise les éléments communs aux pages comme l’en-tête, la navigation et le pied de page.',
-                    'Les pages conservent leur contenu spécifique dans des vues qui utilisent ce layout.',
-                ],
-            ],
-        ];
-    }
-
     public function index(): View
     {
         return view('posts.index', [
             'heading' => 'Tous les articles',
-            'posts' => $this->posts(),
+            'posts' => Post::latest('id')->paginate(4),
         ]);
     }
 
     public function archive(string $year): View
     {
-        $posts = array_filter(
-            $this->posts(),
-            fn (array $post): bool => $post['year'] === (int) $year,
-        );
-
         return view('posts.index', [
             'heading' => 'Articles de '.$year,
-            'posts' => $posts,
+            'posts' => Post::whereYear('published_at', $year)
+                ->latest('id')
+                ->paginate(4),
         ]);
     }
 
-    public function show(string $slug): View
+    public function create(): View
     {
-        $posts = $this->posts();
+        return view('posts.create');
+    }
 
-        abort_unless(array_key_exists($slug, $posts), 404);
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/', 'unique:posts,slug'],
+            'body' => ['required', 'string', 'min:20'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
 
-        return view('posts.show', ['post' => $posts[$slug]]);
+        $validated['is_published'] = $request->boolean('is_published');
+        $validated['published_at'] = $validated['is_published'] ? now() : null;
+
+        $post = Post::create($validated);
+
+        return redirect()
+            ->route('posts.show', $post)
+            ->with('status', 'Article créé.');
+    }
+
+    public function show(Post $post): View
+    {
+        return view('posts.show', compact('post'));
     }
 }

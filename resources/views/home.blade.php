@@ -10,11 +10,21 @@
         <p class="text-lg leading-8 text-gray-700">
             Explorez les routes Laravel, les contrôleurs et les vues Blade à travers des articles pédagogiques.
         </p>
-        <x-alert type="success" title="Sprint en cours">
-            Les pages du projet sont maintenant composées avec des composants Blade réutilisables.
-        </x-alert>
         <a href="{{ route('posts.index') }}" class="inline-flex rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700">
             Parcourir les articles
         </a>
     </div>
+
+    <section class="mt-10" aria-labelledby="latest-posts-heading">
+        <h2 id="latest-posts-heading" class="text-2xl font-bold tracking-tight text-gray-900">Articles récents</h2>
+        <div class="mt-5 grid gap-5 md:grid-cols-2">
+            @forelse ($latestPosts as $post)
+                <x-post-card :post="$post" />
+            @empty
+                <x-alert type="info" title="Aucun article récent" class="md:col-span-2">
+                    Les articles publiés apparaîtront ici.
+                </x-alert>
+            @endforelse
+        </div>
+    </section>
 </x-layout>
