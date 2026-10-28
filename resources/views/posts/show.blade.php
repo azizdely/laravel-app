@@ -66,6 +66,17 @@
         </div>
     </article>
 
+    @if ($related->isNotEmpty())
+        <section class="mx-auto mt-12 max-w-3xl" aria-labelledby="related-posts-heading">
+            <h2 id="related-posts-heading" class="text-2xl font-bold tracking-tight text-gray-900">Dans la même catégorie</h2>
+            <div class="mt-5 grid gap-5 md:grid-cols-2">
+                @foreach ($related as $relatedPost)
+                    <x-post-card :post="$relatedPost" />
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <p class="mt-8">
         <x-navigation-link route-name="posts.index" active-pattern="posts.*" label="Retour aux articles" />
     </p>
