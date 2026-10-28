@@ -1,58 +1,59 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Mini-CMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mini-CMS est un projet d’atelier Laravel consacré au routage, aux contrôleurs et aux layouts Blade.
 
-## About Laravel
+## État actuel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Routes organisées et nommées avec des groupes `prefix` et `name`.
+- Contrôleurs `PageController` et `PostController` pour traiter les requêtes.
+- Routes paramétrées avec contraintes de slug et de numéro.
+- Composant de layout Blade partagé, avec les assets chargés par Vite et Tailwind CSS.
+- Liste d’articles et pages de détail accessibles avec leurs noms de route.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation et démarrage
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Prérequis : PHP 8.3+, Composer, Node.js et npm.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```powershell
+composer install
+npm install
+Copy-Item .env.example .env
+php artisan key:generate
+php artisan migrate
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Ouvrez ensuite <http://localhost:8000>. Pour lancer les outils de développement ensemble, utilisez `composer run dev`.
 
-## Contributing
+## Routes disponibles
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Méthode | URL | Nom de route | Description |
+| --- | --- | --- | --- |
+| GET | `/` | `home` | Page d’accueil Mini-CMS |
+| GET | `/posts` | `posts.index` | Liste des articles |
+| GET | `/posts/{slug}` | `posts.show` | Détail d’un article (`[a-z0-9-]+`) |
+| GET | `/pages/{page}` | `pages.show` | Page avec paramètre numérique |
+| GET | `/bonjour` | `bonjour` | Exemple de route vers un contrôleur |
+| GET | `/bonjour-court` | `bonjour.court` | Variante de la route bonjour |
+| GET | `/bienvenue` | `bienvenue` | Exemple de vue Blade avec données |
+| GET | `/version` | `version` | Versions de Laravel et PHP |
+| GET | `/heure` | `heure` | Date et heure dans une vue Blade |
 
-## Code of Conduct
+Inspectez les routes avec `php artisan route:list`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Captures d’écran
 
-## Security Vulnerabilities
+Les trois captures demandées pour la session :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Page d’accueil
 
-## License
+![Page d’accueil](screenshots/s03-accueil.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Liste des articles
+
+![Liste des articles](screenshots/s03-articles.png)
+
+### Détail d’un article
+
+![Article Routage, contrôleurs et layouts Blade](screenshots/s03-article.png)

@@ -1,30 +1,30 @@
 <?php
 
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PageController::class, 'home'])->name('home');
 
-Route::get('/bonjour', function () {
-    return 'Bonjour MDW3 ! Voici ma première route Laravel 13.';
-});
+Route::get('/bonjour', [PageController::class, 'bonjour'])->name('bonjour');
+Route::get('/bonjour-court', [PageController::class, 'bonjourCourt'])->name('bonjour.court');
+Route::get('/bienvenue', [PageController::class, 'bienvenue'])->name('bienvenue');
+Route::get('/version', [PageController::class, 'version'])->name('version');
+Route::get('/heure', [PageController::class, 'heure'])->name('heure');
 
-Route::get('/bonjour-court', fn () => 'Même résultat, écrit avec une fonction fléchée.');
+Route::prefix('posts')
+    ->name('posts.')
+    ->group(function () {
+        Route::get('/', [PostController::class, 'index'])->name('index');
+        Route::get('/{slug}', [PostController::class, 'show'])
+            ->where('slug', '[a-z0-9-]+')
+            ->name('show');
+    });
 
-Route::get('/bienvenue', function () {
-    return view('bienvenue', [
-        'etudiant' => 'aziz dely',
-        'groupe' => 'MDW32',
-        'cours' => 'Atelier Framework Côté Serveur',
-    ]);
-});
-Route::get('/version', function () {
-    return 'Laravel ' . app()->version() . ' - PHP ' . PHP_VERSION;
-});
-Route::get('/heure', function () {
-    return view('heure', [
-        'heure' => now()->format('H:i'),
-        'date'  => now()->format('d/m/Y'),
-    ]);
-});
+Route::prefix('pages')
+    ->name('pages.')
+    ->group(function () {
+        Route::get('/{page}', [PageController::class, 'show'])
+            ->whereNumber('page')
+            ->name('show');
+    });
