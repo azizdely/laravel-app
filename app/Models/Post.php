@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends Model
 {
+    /** @use HasFactory<\Database\Factories\PostFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'slug',
@@ -14,6 +19,7 @@ class Post extends Model
         'body',
         'is_published',
         'published_at',
+        'category_id',
     ];
 
     protected function casts(): array
@@ -27,6 +33,16 @@ class Post extends Model
     public function scopePublished(Builder $query): void
     {
         $query->where('is_published', true);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function getRouteKeyName(): string
