@@ -14,7 +14,15 @@
             {{ $post->title }}
         </a>
     </h2>
+    <p class="text-xs text-gray-500">{{ $post->category?->name ?? 'Sans catégorie' }} - par {{ $post->user?->name ?? 'auteur inconnu' }}</p>
     <p class="mt-2 flex-1 leading-7 text-gray-600">{{ $post->excerpt ?? \Illuminate\Support\Str::limit($post->body, 120) }}</p>
+    @if ($post->tags->isNotEmpty())
+        <ul class="flex flex-wrap gap-2" aria-label="Tags de l'article">
+            @foreach ($post->tags as $tag)
+                <li class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{{ $tag->name }}</li>
+            @endforeach
+        </ul>
+    @endif
     <div class="mt-5 flex items-center justify-between gap-3 border-t border-gray-100 pt-4 text-sm">
         <span class="text-gray-500">{{ $post->created_at->format('d/m/Y') }}</span>
         @if ($post->published_at)
