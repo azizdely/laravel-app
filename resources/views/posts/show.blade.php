@@ -19,7 +19,17 @@
             @else
                 Brouillon
             @endif
+            - {{ $post->category?->name ?? 'Sans catégorie' }}
+            - par {{ $post->user?->name ?? 'auteur inconnu' }}
         </p>
+
+        @if ($post->tags->isNotEmpty())
+            <ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags de l'article">
+                @foreach ($post->tags as $tag)
+                    <li class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{{ $tag->name }}</li>
+                @endforeach
+            </ul>
+        @endif
 
         @if ($post->excerpt)
             <p class="mt-6 text-lg text-gray-600">{{ $post->excerpt }}</p>
