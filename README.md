@@ -22,7 +22,8 @@ Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <htt
 - Modèles `Category` et `Tag` reliés à `Post` : un article a une catégorie et un auteur (1:N) et plusieurs tags (N:N, table pivot `post_tag`).
 - Fabriques `PostFactory` (état `published()`), `CategoryFactory`, `TagFactory` et seeders pour un jeu de données réaliste.
 - Chargement anticipé avec `with()` ; `Model::preventLazyLoading()` signale tout problème N+1 hors production.
-- Tests Pest : `PostPagesTest`, `PostWriteTest` et `PostRelationsTest`.
+- Pages par tag et liste des tags populaires sur l'accueil (session 08).
+- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest` et `PostTaxonomyTest`.
 
 ## Données de démonstration
 
@@ -36,6 +37,7 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | GET | `/a-propos` | `about` | `PageController@about` |
 | GET | `/heure` | `time` | `PageController@time` |
 | GET | `/posts/archive/{year}` | `posts.archive` | `PostController@archive` |
+| GET | `/posts/tag/{tag:slug}` | `posts.tag` | `PostController@byTag` |
 | GET | `/posts` | `posts.index` | `PostController@index` |
 | GET | `/posts/create` | `posts.create` | `PostController@create` |
 | POST | `/posts` | `posts.store` | `PostController@store` |
