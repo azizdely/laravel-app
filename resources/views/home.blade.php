@@ -27,4 +27,19 @@
             @endforelse
         </div>
     </section>
+
+    @if ($popularTags->isNotEmpty())
+        <section class="mt-10" aria-labelledby="popular-tags-heading">
+            <h2 id="popular-tags-heading" class="text-2xl font-bold tracking-tight text-gray-900">Tags populaires</h2>
+            <ul class="mt-5 flex flex-wrap gap-3">
+                @foreach ($popularTags as $tag)
+                    <li>
+                        <a href="{{ route('posts.tag', $tag->slug) }}" class="inline-flex rounded-full bg-indigo-50 px-3 py-1 font-medium text-indigo-700 hover:bg-indigo-100">
+                            {{ $tag->name }} ({{ $tag->posts_count }})
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
 </x-layout>

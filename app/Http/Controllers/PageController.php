@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Tag;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -15,6 +17,13 @@ class PageController extends Controller
                 ->latest('published_at')
                 ->take(3)
                 ->get(),
+            'popularTags' => Tag::withCount([
+                'posts' => fn (Builder $query) => $query->published(),
+            ])
+                ->orderByDesc('posts_count')
+                ->orderBy('name')
+                ->get()
+                ->filter(fn (Tag $tag) => $tag->posts_count > 0),
         ]);
     }
 

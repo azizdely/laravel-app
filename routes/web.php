@@ -14,6 +14,9 @@ Route::get('/posts/archive/{year}', [PostController::class, 'archive'])
     ->whereNumber('year')
     ->name('posts.archive');
 
+Route::get('/posts/tag/{tag:slug}', [PostController::class, 'byTag'])
+    ->name('posts.tag');
+
 Route::resource('posts', PostController::class)
     ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
 

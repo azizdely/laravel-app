@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -26,6 +27,18 @@ class PostController extends Controller
                 ->with('user', 'category', 'tags')
                 ->whereYear('published_at', $year)
                 ->latest('id')
+                ->paginate(4),
+        ]);
+    }
+
+    public function byTag(Tag $tag): View
+    {
+        return view('posts.index', [
+            'heading' => 'Tag : '.$tag->name,
+            'posts' => $tag->posts()
+                ->published()
+                ->with('user', 'category', 'tags')
+                ->latest('published_at')
                 ->paginate(4),
         ]);
     }
