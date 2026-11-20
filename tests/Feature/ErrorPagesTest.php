@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\User;
 
 beforeEach(function () {
     $this->withoutVite();
@@ -16,11 +17,12 @@ it('shows the branded 404 page for an unknown route', function () {
 it('shows the branded 503 page when the site is read-only', function () {
     config(['site.read_only' => true]);
 
-    $this->post(route('posts.store'), [
-        'title' => 'Article refusé',
-        'slug' => 'article-refuse',
-        'body' => 'Contenu assez long pour passer la validation.',
-    ])->assertStatus(503)
+    $this->actingAs(User::factory()->create())
+        ->post(route('posts.store'), [
+            'title' => 'Article refusé',
+            'slug' => 'article-refuse',
+            'body' => 'Contenu assez long pour passer la validation.',
+        ])->assertStatus(503)
         ->assertSee('Service momentanément indisponible')
         ->assertSee('Le site est en lecture seule.');
 });
