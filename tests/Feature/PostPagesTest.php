@@ -108,8 +108,8 @@ it('rejects an invalid slug and a body that is too short', function () {
         ])
         ->assertOk()
         ->assertSee('Le formulaire contient des erreurs')
-        ->assertSee('The slug field format is invalid.')
-        ->assertSee('The body field must be at least 20 characters.');
+        ->assertSee('Le format du champ slug est invalide.')
+        ->assertSee('Le champ contenu doit contenir au moins 20 caractères.');
 
     $this->assertDatabaseCount('posts', 0);
 });
