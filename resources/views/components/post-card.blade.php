@@ -14,12 +14,21 @@
             {{ $post->title }}
         </a>
     </h2>
-    <p class="text-xs text-gray-500">{{ $post->category?->name ?? 'Sans catégorie' }} - par {{ $post->user?->name ?? 'auteur inconnu' }}</p>
+    <p class="text-xs text-gray-500">
+        @if ($post->category)
+            <a href="{{ route('posts.category', $post->category) }}" class="underline hover:text-red-700">{{ $post->category->name }}</a>
+        @else
+            Sans catégorie
+        @endif
+        - par {{ $post->user?->name ?? 'auteur inconnu' }}
+    </p>
     <p class="mt-2 flex-1 leading-7 text-gray-600">{{ $post->excerpt ?? \Illuminate\Support\Str::limit($post->body, 120) }}</p>
     @if ($post->tags->isNotEmpty())
         <ul class="flex flex-wrap gap-2" aria-label="Tags de l'article">
             @foreach ($post->tags as $tag)
-                <li class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{{ $tag->name }}</li>
+                <li class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
+                    <a href="{{ route('posts.tag', $tag) }}">{{ $tag->name }}</a>
+                </li>
             @endforeach
         </ul>
     @endif

@@ -1,4 +1,10 @@
-@props(['post' => null])
+@props(['post' => null, 'categories', 'tags'])
+
+@php
+    $selectedTags = session()->hasOldInput()
+        ? old('tags', [])
+        : ($post?->tags->pluck('id')->all() ?? []);
+@endphp
 
 <form
     method="POST"
@@ -78,6 +84,43 @@
             <p id="body-error" class="mt-2 text-sm text-red-700">{{ $message }}</p>
         @enderror
     </div>
+
+    <div>
+        <label for="category_id" class="block text-sm font-medium text-gray-900">Catégorie</label>
+        <select
+            id="category_id"
+            name="category_id"
+            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600/30"
+        >
+            <option value="">Aucune catégorie</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" @selected(old('category_id', $post?->category_id) == $category->id)>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('category_id')
+            <p class="mt-2 text-sm text-red-700">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <fieldset>
+        <legend class="block text-sm font-medium text-gray-900">Tags</legend>
+        <div class="mt-2 flex flex-wrap gap-4">
+            @foreach ($tags as $tag)
+                <label class="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" @checked(in_array($tag->id, $selectedTags))>
+                    {{ $tag->name }}
+                </label>
+            @endforeach
+        </div>
+        @error('tags')
+            <p class="mt-2 text-sm text-red-700">{{ $message }}</p>
+        @enderror
+        @error('tags.*')
+            <p class="mt-2 text-sm text-red-700">{{ $message }}</p>
+        @enderror
+    </fieldset>
 
     <div class="flex items-start gap-3">
         <input
