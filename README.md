@@ -17,12 +17,14 @@ php artisan migrate
 
 Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <http://localhost:8000>.
 
-## État actuel (tag lab-05b)
+## État actuel (tag lab-06)
 
-- Back-office des catégories et des tags sous `/admin` (`CategoryController`, `TagController`), protégé par le middleware `writable`, avec Form Requests et messages flash.
-- Messages de validation en français (`lang/fr/validation.php`, `APP_LOCALE=fr`), avec des noms de champs lisibles et des messages propres aux slugs de catégories et de tags.
-- Pages 404 et 503 affichées dans le layout du site ; les pages d'articles et de catégories introuvables proposent des liens utiles.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest` et `ErrorPagesTest`.
+- Inscription, connexion et déconnexion manuelles avec mots de passe hachés, régénération de session et messages flash.
+- Colonne `role` (`author` par défaut, `admin` pour le compte de démonstration `test@example.com` créé par le seeder).
+- Les écritures et le back-office demandent une session authentifiée ; les nouveaux articles sont liés à leur auteur.
+- Gate `manage-categories` et `PostPolicy` : un auteur gère ses articles, un administrateur tous les articles.
+- Pages « Mes articles » et option « Se souvenir de moi » disponibles après connexion.
+- Tests Pest : sessions d'authentification, contrôle de propriété, CRUD des catégories/tags et pages d'erreur inclus.
 
 ## Données de démonstration
 
@@ -58,6 +60,29 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
 | PUT/PATCH | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
+| GET | `/inscription` | `register` | `Auth\RegisterController@create` |
+| POST | `/inscription` | `register.store` | `Auth\RegisterController@store` |
+| GET | `/connexion` | `login` | `Auth\LoginController@create` |
+| POST | `/connexion` | `login.store` | `Auth\LoginController@store` |
+| POST | `/deconnexion` | `logout` | `Auth\LoginController@destroy` |
+| GET | `/mes-articles` | `my-posts` | `PostController@myPosts` |
+
+## Comparaison avec le starter kit Livewire
+
+| Fonction | Mini-CMS (authentification manuelle) | Starter kit Livewire |
+|---|---|---|
+| Routes d'authentification | Définies dans `routes/web.php` | Enregistrées par Fortify |
+| Inscription | `RegisterController` et `RegisterRequest` | Fortify et action `CreateNewUser` |
+| Connexion | `LoginController` avec `Auth::attempt()` | Fortify |
+| Déconnexion | `Auth::logout()`, invalidation de session et nouveau jeton CSRF | Action Livewire de déconnexion |
+| Limitation des tentatives | Non implémentée | Limiteur d'authentification intégré |
+| Mot de passe oublié | Non implémenté | Fonctionnalité Fortify |
+| Vérification de l'e-mail | Non implémentée | Fonctionnalité Fortify optionnelle |
+| Double authentification | Non implémentée | Fonctionnalité Fortify optionnelle |
+| Rôles et autorisations | Rôles, Gate et `PostPolicy` | À implémenter par l'application |
+| Tests | Tests Pest dédiés | Tests Pest/PHPUnit du starter kit |
+
+Dans un vrai projet, je garderais le starter kit pour ses fonctions d'authentification éprouvées, comme la limitation des tentatives, la récupération du mot de passe et la vérification d'adresse e-mail. Les rôles et les autorisations métier resteraient spécifiques au projet.
 
 ## Captures
 
@@ -102,3 +127,7 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 ### Session 10
 
 Back-office des catégories et des tags, validation en français, et pages 404/503 dans le layout. Les captures d'écran de cette séance restent à prendre depuis un navigateur.
+
+### Session 11
+
+Comptes, connexion, navigation selon l'état de connexion et autorisations par rôle et propriété d'article. Les captures d'écran de cette séance restent à prendre depuis un navigateur.
