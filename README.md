@@ -17,14 +17,16 @@ php artisan migrate
 
 Démarrez les serveurs Laravel et Vite avec `composer run dev`, puis ouvrez <http://localhost:8000>.
 
-## État actuel (tag lab-06)
+## État actuel (tag lab-07)
 
 - Inscription, connexion et déconnexion manuelles avec mots de passe hachés, régénération de session et messages flash.
 - Colonne `role` (`author` par défaut, `admin` pour le compte de démonstration `test@example.com` créé par le seeder).
 - Les écritures et le back-office demandent une session authentifiée ; les nouveaux articles sont liés à leur auteur.
 - Gate `manage-categories` et `PostPolicy` : un auteur gère ses articles, un administrateur tous les articles.
 - Pages « Mes articles » et option « Se souvenir de moi » disponibles après connexion.
-- Tests Pest : sessions d'authentification, contrôle de propriété, CRUD des catégories/tags et pages d'erreur inclus.
+- Middleware administrateur et Gate `manage-tags` pour le back-office ; les listes publiques incluent seulement les articles publiés et les auteurs voient aussi leurs brouillons.
+- API de lecture installée avec Sanctum : articles publiés paginés, ressources JSON pour article, catégorie et tags, et autorisation des brouillons.
+- Tests Pest : authentification, autorisations, CRUD des catégories/tags, erreurs, visibilité et API inclus.
 
 ## Données de démonstration
 
@@ -66,6 +68,9 @@ Après un clone, reconstruire la base avec `php artisan migrate:fresh --seed`. A
 | POST | `/connexion` | `login.store` | `Auth\LoginController@store` |
 | POST | `/deconnexion` | `logout` | `Auth\LoginController@destroy` |
 | GET | `/mes-articles` | `my-posts` | `PostController@myPosts` |
+| GET | `/api/posts` | `api.posts.index` | `Api\PostController@index` |
+| GET | `/api/posts/{post}` | `api.posts.show` | `Api\PostController@show` |
+| GET | `/api/user` | — | Route d'exemple protégée par `auth:sanctum` |
 
 ## Comparaison avec le starter kit Livewire
 
@@ -131,3 +136,7 @@ Back-office des catégories et des tags, validation en français, et pages 404/5
 ### Session 11
 
 Comptes, connexion, navigation selon l'état de connexion et autorisations par rôle et propriété d'article. Les captures d'écran de cette séance restent à prendre depuis un navigateur.
+
+### Sessions 12 et 13
+
+Back-office réservé aux administrateurs, visibilité des brouillons selon le rôle et l'auteur, et API JSON publique en lecture seule. La pagination accepte `per_page` de 1 à 50. Les captures d'écran Postman de la séance 13 restent à prendre depuis un client API.
