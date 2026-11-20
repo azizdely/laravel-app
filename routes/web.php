@@ -42,7 +42,7 @@ Route::middleware('writable')->group(function () {
             ->name('posts.publication');
         Route::get('/mes-articles', [PostController::class, 'myPosts'])->name('my-posts');
 
-        Route::prefix('admin')->name('admin.')->group(function () {
+        Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
             Route::resource('categories', CategoryController::class)->except('show');
             Route::resource('tags', TagController::class)->except('show');
         });

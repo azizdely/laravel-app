@@ -10,6 +10,9 @@
             @can('manage-categories')
                 <x-navigation-link route-name="admin.categories.index" active-pattern="admin.categories.*" label="Catégories" />
             @endcan
+            @can('manage-tags')
+                <x-navigation-link route-name="admin.tags.index" active-pattern="admin.tags.*" label="Tags" />
+            @endcan
         </div>
 
         <div class="flex flex-wrap items-center gap-2">

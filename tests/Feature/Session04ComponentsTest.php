@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\User;
 
 it('reconstructs the article pages with reusable components', function () {
     $publishedPost = Post::create([
@@ -17,6 +18,8 @@ it('reconstructs the article pages with reusable components', function () {
         'body' => 'Cet article est conservé comme brouillon.',
         'is_published' => false,
     ]);
+
+    $this->actingAs(User::factory()->admin()->create());
 
     $this->get(route('posts.index'))
         ->assertOk()
