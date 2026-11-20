@@ -67,7 +67,7 @@ it('stores a new article as a draft when publishing is not requested', function 
 
     $response
         ->assertRedirect(route('posts.show', 'premier-article-cree'))
-        ->assertSessionHas('status', 'Article créé.');
+        ->assertSessionHas('success', 'Article créé.');
 
     $this->assertDatabaseHas('posts', [
         'title' => 'Premier article créé',

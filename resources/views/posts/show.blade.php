@@ -1,12 +1,6 @@
 <x-layout>
     <x-slot:title>{{ $post->title }} - Mini-CMS</x-slot:title>
 
-    @if (session('status'))
-        <x-alert type="success" title="Enregistrement terminé" class="mb-6">
-            {{ session('status') }}
-        </x-alert>
-    @endif
-
     <article class="mx-auto max-w-3xl">
         <x-page-header :title="$post->title" />
 
