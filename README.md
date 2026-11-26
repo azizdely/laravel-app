@@ -6,6 +6,8 @@ Mini-CMS est une application pédagogique construite avec Laravel 13 et SQLite.
 Elle présente la gestion d'articles, de catégories et de tags, ainsi qu'une API
 JSON protégée par des jetons Sanctum pour ses opérations d'écriture.
 
+État de ce dépôt : Mini-CMS livré jusqu'au tag `lab-08b` (sessions 14 et 15).
+
 ## Fonctionnalités
 
 - Inscription, connexion et déconnexion par session sur le site.
